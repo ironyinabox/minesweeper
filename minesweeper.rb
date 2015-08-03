@@ -100,9 +100,39 @@ class Board
   def in_bounds?(pos)
     pos.all? { |idx| idx.between?(0, BOARD_DIM-1) }
   end
+
+  def revealed_tiles_count
+    count = 0
+    board.each do |row|
+      row.each do |tile|
+        count += 1 if tile.status == :revealed
+      end
+    end
+    count
+  end
 end
 
 class Game
+  attr_accessor :board
+
+  def initialize
+    @board = Board.new
+  end
+
+  def play
+    until won?
+
+    end
+  end
+
+  def play_turn
+  
+  end
+
+  def won?
+    board.revealed_tiles_count == (Board::BOARD_DIM ** 2) - Board::BOMBS_NUM
+  end
+
 end
 
 if __FILE__ == $PROGRAM_NAME
