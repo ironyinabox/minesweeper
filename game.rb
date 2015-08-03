@@ -13,14 +13,17 @@ class Game
       board.render
       action, coordinate = prompt
       if action == "R"
-        board.reveal(coordinate)
+        board.reveal_tile(coordinate)
       else
-        board.flag(coordinate)
+        board.flag_tile(coordinate)
       end
       board.render
     end
-
-    puts "CONGRATS YOU WIN"
+    if won?
+      puts "CONGRATS YOU WIN"
+    else
+      puts "x.x"
+    end
   end
 
   def prompt
@@ -45,9 +48,6 @@ class Game
 end
 
 if __FILE__ == $PROGRAM_NAME
-  b = Board.new
-  b.render
-  b[0,0].reveal
-  b.render
-  p Tile.neighbors([0, 0], b)
+  g = Game.new
+  g.play
 end

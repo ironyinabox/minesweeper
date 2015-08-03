@@ -38,6 +38,19 @@ class Tile
     result
   end
 
+  def self.neighbors_coords(pos, board)
+    result = []
+    row, col = pos
+    NEIGHBOR_DIRECTIONS.each do |coord|
+      shift_row, shift_col = coord
+      neighbor_row, neighbor_col = row+shift_row, col+shift_col
+      if board.in_bounds?([neighbor_row, neighbor_col])
+        result << [neighbor_row, neighbor_col]
+      end
+    end
+    result
+  end
+
   def neighbor_bomb_count
     @neighbor_bomb_count
   end

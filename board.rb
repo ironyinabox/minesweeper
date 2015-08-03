@@ -30,9 +30,11 @@ class Board
   end
 
   def render
-    board.each do |row|
+    puts "   0 1 2 3 4 5 6 7 8"
+    board.each_with_index do |row, idx|
+      print "#{idx}: "
       row.each do |tile|
-        print tile.to_s
+        print tile.to_s + " "
       end
       puts "\n"
     end
@@ -49,6 +51,18 @@ class Board
 
   def bomb_revealed?
     board.flatten.any? { |tile| tile.is_bomb? && tile.status == :revealed }
+  end
+
+  def reveal_tile(pos)
+    row, col = pos
+    tile = self[row, col]
+    if tile.status != :revealed
+      tile.reveal
+      if tile.neighbor_bomb_count == 0
+        Tile.neighbors_coords(pos, self).each { |coord| reveal_tile(coord) }
+      end
+    end
+
   end
 
 end
