@@ -1,7 +1,7 @@
 require 'byebug'
 
 class Tile
-  attr_accessor :is_bomb, :status
+  attr_accessor :is_bomb, :status, :pos, :board, :neighbor_bomb_count
 
   NEIGHBOR_DIRECTIONS = [[-1, -1],
                         [-1, 0],
@@ -17,7 +17,6 @@ class Tile
   def initialize(is_bomb)
     @is_bomb = is_bomb
     @status = :hidden
-    # @neighbors = []
   end
 
 
@@ -39,6 +38,7 @@ class Tile
   end
 
   def neighbor_bomb_count
+    @neighbor_bomb_count
   end
 
   def is_bomb?
@@ -50,7 +50,7 @@ class Tile
     when :hidden
       "*"
     when :revealed
-      is_bomb? ? "B" : "_"
+      is_bomb? ? "B" : "#{neighbor_bomb_count}"
     when :flagged
       "F"
     end
@@ -65,11 +65,22 @@ class Board
   attr_accessor :board
 
   def initialize
-    board = Array.new(BOARD_DIM ** 2) {Tile.new(false) }
-    # debugger
+    board = Array.new(BOARD_DIM ** 2) { Tile.new(false) }
+
     BOMBS_NUM.times { |i| board[i].is_bomb = true }
     board.shuffle!
     @board = board.each_slice(BOARD_DIM).to_a
+
+    @board.each_with_index do |row, idx|
+      row.each_with_index do |tile, idy|
+        count = 0
+        Tile.neighbors([idx, idy], self).each do |neighbor|
+          count += 1 if neighbor.is_bomb?
+        end
+        tile.neighbor_bomb_count = count
+      end
+    end
+
   end
 
   def [](x, y)
