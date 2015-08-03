@@ -8,7 +8,21 @@ class Tile
     @status = :hidden
     @neighbors = []
   end
-  
+
+
+  def reveal
+  end
+
+  def neighbors
+  end
+
+  def neighbor_bomb_count
+  end
+
+  def is_bomb?
+    is_bomb
+  end
+
 end
 
 class Board
@@ -19,10 +33,11 @@ class Board
 
   def initialize
     board = Array.new(BOARD_DIM ** 2, Tile.new(false))
-    BOMBS_NUM.times do |i|
-      board[i].is_bomb = true
-    end
+    BOMBS_NUM.times { |i| board[i].is_bomb? = true }
     board.shuffle!
     @board = board.each_slice(BOARD_DIM)
   end
+end
+
+class Game
 end
