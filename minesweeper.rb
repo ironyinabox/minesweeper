@@ -26,7 +26,14 @@ class Tile
   end
 
   def to_s
-    is_bomb? ? "*" : "_"
+    case status
+    when :hidden
+      "*"
+    when :revealed
+      is_bomb? ? "B" : "_"
+    when :flagged
+      "F"
+    end
   end
 
 end
