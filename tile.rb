@@ -25,6 +25,18 @@ class Tile
     self.status = :revealed
   end
 
+  def flag
+    self.status = :flagged
+  end
+
+  def unflag
+    self.status = :hidden
+  end
+
+  def flagged?
+    self.status == :flagged
+  end
+
   def self.neighbors(pos, board)
     result = []
     row, col = pos
@@ -64,7 +76,13 @@ class Tile
     when :hidden
       "*"
     when :revealed
-      is_bomb? ? "B" : "#{neighbor_bomb_count}"
+      if is_bomb?
+        "B"
+      elsif neighbor_bomb_count == 0
+         "_"
+      else
+         "#{neighbor_bomb_count}"
+      end
     when :flagged
       "F"
     end

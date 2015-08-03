@@ -31,6 +31,7 @@ class Board
 
   def render
     puts "   0 1 2 3 4 5 6 7 8"
+    puts "   -----------------"
     board.each_with_index do |row, idx|
       print "#{idx}: "
       row.each do |tile|
@@ -56,13 +57,26 @@ class Board
   def reveal_tile(pos)
     row, col = pos
     tile = self[row, col]
-    if tile.status != :revealed
+    if tile.status != :revealed && tile.status != :flagged
       tile.reveal
       if tile.neighbor_bomb_count == 0
         Tile.neighbors_coords(pos, self).each { |coord| reveal_tile(coord) }
       end
     end
+  end
 
+  def flag_tile(pos)
+    row, col = pos
+    tile = self[row, col]
+    if tile.status != :revealed
+      if tile.flagged?
+        tile.unflag
+      else
+        tile.flag
+      end
+    else
+      puts "Cannot flag the revealed!!!"
+    end
   end
 
 end

@@ -9,6 +9,7 @@ class Game
   end
 
   def play
+    system('clear')
     until over?
       board.render
       action, coordinate = prompt
@@ -17,8 +18,9 @@ class Game
       else
         board.flag_tile(coordinate)
       end
-      board.render
+      system('clear')
     end
+    board.render
     if won?
       puts "CONGRATS YOU WIN"
     else
