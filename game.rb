@@ -12,7 +12,9 @@ class Game
     system('clear')
     until over?
       board.render
-      action, coordinate = prompt
+      begin
+        action, coordinate = prompt
+      end until valid?(coordinate)
       if action == "R"
         board.reveal_tile(coordinate)
       else
@@ -33,6 +35,10 @@ class Game
     action, coordinate = gets.chomp.split
     coordinate = coordinate.split(",").map(&:to_i)
     [action, coordinate]
+  end
+
+  def valid?(pos)
+    board.in_bounds?(pos) && board[*pos].status == :hidden
   end
 
   def won?

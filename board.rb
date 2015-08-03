@@ -1,10 +1,21 @@
 require_relative 'tile.rb'
+require 'byebug'
 
 class Board
   BOARD_DIM = 9
   BOMBS_NUM = 10
 
   attr_accessor :board
+
+  def initialize
+    board = Array.new(BOARD_DIM ** 2) { Tile.new(false) }
+
+    BOMBS_NUM.times { |i| board[i].is_bomb = true }
+    board.shuffle!
+    @board = board.each_slice(BOARD_DIM).to_a
+
+    initialize_bomb_counts
+  end
 
   def initialize_bomb_counts
     board.each_with_index do |row, idx|
@@ -16,16 +27,6 @@ class Board
         tile.neighbor_bomb_count = count
       end
     end
-  end
-
-  def initialize
-    board = Array.new(BOARD_DIM ** 2) { Tile.new(false) }
-
-    BOMBS_NUM.times { |i| board[i].is_bomb = true }
-    board.shuffle!
-    @board = board.each_slice(BOARD_DIM).to_a
-
-    initialize_bomb_counts
   end
 
   def [](x, y)
@@ -50,11 +51,11 @@ class Board
   end
 
   def revealed_tiles_count
-    board.flatten.count { |tile| tile.status == :revealed }
+    tiles.count { |tile| tile.revealed? }
   end
 
   def bomb_revealed?
-    board.flatten.any? { |tile| tile.is_bomb? && tile.status == :revealed }
+    tiles.any? { |tile| tile.is_bomb? && tile.revealed? }
   end
 
   def reveal_tile(pos)
@@ -71,10 +72,11 @@ class Board
   def flag_tile(pos)
     row, col = pos
     tile = self[row, col]
-    if tile.status != :revealed
-      tile.flagged? ? tile.unflag : tile.flag
-    else
-      puts "Cannot flag the revealed!!!"
-    end
+    tile.toggle_flag
+  end
+
+  private
+  def tiles
+    board.flatten
   end
 end
