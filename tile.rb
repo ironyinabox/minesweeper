@@ -53,7 +53,7 @@ class Tile
   end
 
   def toggle_flag
-    tile.flagged? ? tile.unflag : tile.flag
+    flagged? ? unflag : flag
   end
 
   def revealed?
@@ -76,7 +76,7 @@ class Tile
       if is_bomb?
         "B"
       else
-        neighbor_bomb_count == 0 ? "_" : "#{neighbor_bomb_count}"
+        neighbor_bomb_count == 0 ? "_" : neighbor_bomb_count.to_s
       end
     when :flagged
       "F"
