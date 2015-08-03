@@ -120,17 +120,37 @@ class Game
   end
 
   def play
-    until won?
-
+    until over?
+      board.render
+      action, coordinate = prompt
+      if action == "R"
+        board.reveal(coordinate)
+      else
+        board.flag(coordinate)
+      end
+      board.render
     end
+
+    puts "CONGRATS YOU WIN"
   end
 
-  def play_turn
-  
+  def prompt
+    puts "F/R which coordinate? (ie F 0,0)"
+    action, coordinate = gets.chomp.split
+    coordinate = coordinate.split(",").map(&:to_i)
+    [action, coordinate]
   end
 
   def won?
     board.revealed_tiles_count == (Board::BOARD_DIM ** 2) - Board::BOMBS_NUM
+  end
+
+  def dead?
+
+  end
+
+  def over?
+    won? || dead?
   end
 
 end
