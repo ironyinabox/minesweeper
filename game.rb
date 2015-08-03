@@ -46,7 +46,6 @@ class Game
   def over?
     won? || dead?
   end
-
 end
 
 if __FILE__ == $PROGRAM_NAME

@@ -6,14 +6,8 @@ class Board
 
   attr_accessor :board
 
-  def initialize
-    board = Array.new(BOARD_DIM ** 2) { Tile.new(false) }
-
-    BOMBS_NUM.times { |i| board[i].is_bomb = true }
-    board.shuffle!
-    @board = board.each_slice(BOARD_DIM).to_a
-
-    @board.each_with_index do |row, idx|
+  def initialize_bomb_counts
+    board.each_with_index do |row, idx|
       row.each_with_index do |tile, idy|
         count = 0
         Tile.neighbors([idx, idy], self).each do |neighbor|
@@ -22,7 +16,16 @@ class Board
         tile.neighbor_bomb_count = count
       end
     end
+  end
 
+  def initialize
+    board = Array.new(BOARD_DIM ** 2) { Tile.new(false) }
+
+    BOMBS_NUM.times { |i| board[i].is_bomb = true }
+    board.shuffle!
+    @board = board.each_slice(BOARD_DIM).to_a
+
+    initialize_bomb_counts
   end
 
   def [](x, y)
@@ -69,14 +72,9 @@ class Board
     row, col = pos
     tile = self[row, col]
     if tile.status != :revealed
-      if tile.flagged?
-        tile.unflag
-      else
-        tile.flag
-      end
+      tile.flagged? ? tile.unflag : tile.flag
     else
       puts "Cannot flag the revealed!!!"
     end
   end
-
 end
