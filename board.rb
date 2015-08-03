@@ -44,12 +44,11 @@ class Board
   end
 
   def revealed_tiles_count
-    count = 0
-    board.each do |row|
-      row.each do |tile|
-        count += 1 if tile.status == :revealed
-      end
-    end
-    count
+    board.flatten.count { |tile| tile.status == :revealed }
   end
+
+  def bomb_revealed?
+    board.flatten.any? { |tile| tile.is_bomb? && tile.status == :revealed }
+  end
+
 end

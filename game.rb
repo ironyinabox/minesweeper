@@ -35,7 +35,7 @@ class Game
   end
 
   def dead?
-
+    board.bomb_revealed?
   end
 
   def over?
